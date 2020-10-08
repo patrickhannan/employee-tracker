@@ -1,5 +1,6 @@
 const inquirer = require("inquirer")
 const mysql = require("mysql");
+const { allowedNodeEnvironmentFlags } = require("process");
 const { start } = require("repl");
 
 var connection = mysql.createConnection({
@@ -29,4 +30,28 @@ var firstPrompt = {
         "Update Employee Roles",
         "Exit",
     ],
+};
+
+function start() {
+    inquirer
+    .prompt(firstPrompt)
+    .then((data) => {
+        if (data.commandChoice === "Add Department") {
+            addDepartment();
+        } else if (data.commandChoice === "Add Role") {
+            addRole();
+        } else if (data.commandChoice === "Add Employee") {
+            addEmployee();
+        } else if (data.commandChoice === "View Departments") {
+            viewDepartments();
+        } else if (data.commandChoice === "View Roles") {
+            viewRoles();
+        } else if (data.commandChoice === "View Employees") {
+            viewEmployees();
+        } else if (data.commandChoice === "Update Employee Roles") {
+            updateRoles();
+        } else if (data.commandChoice === "Exit") {
+            connection.end;
+        }
+    })
 };
