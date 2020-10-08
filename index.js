@@ -66,11 +66,54 @@ function addDepartment() {
     ]).then((response) => {
         connection.query(
             "INSERT INTO department SET ?", 
-            { name: response.newDepartment },
-            (err, res) => {
+            { division: response.newDepartment },
+            (err, results) => {
                 if (err) throw err;
+                console.table(results)
                 startMenu();
             }
         )
     })
 };
+
+function addRole() {
+    connection.query("SELECT * FROM department", function (err, results) {
+        if (err) throw err;
+        const arrayofDepartments = results.map(department => department.division)
+        console.log(arrayofDepartments)
+        inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "jobTitle",
+                message: "What is the name of the employee role you would like to add?",
+            },
+            {
+                type: "input",
+                name: "salary",
+                message: "What is the salary for this role?",
+            },
+            {
+                type: "list",
+                name: "departmentTitle",
+                message: "What department does this role associate with?",
+                choices: arrayofDepartments
+            },
+        ]).then((jobTitle, salary, departmentTitle) => {
+            connection.query(
+                "INSERT INTO roles SET ?", 
+                {
+                    title: jobTitle,
+                    salary: salary,
+                    department_Title: departmentTitle,
+                },
+                (err, results) => {
+                    if (err) throw err;
+                    console.table(results)
+                    startMenu();
+                }
+            )
+        })
+    })
+};
+
