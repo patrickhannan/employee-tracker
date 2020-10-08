@@ -55,3 +55,24 @@ function start() {
         }
     })
 };
+
+function addDepartment() {
+    inquirer
+    .prompt([
+        {
+            type: "input",
+            name: "addedDepartment",
+            message: "What is the name of the department you would like to add?",
+        }
+    ]).then((response) => {
+        connection.query(
+            "INSERT INTO department SET ?", 
+            { name: addedDepartment
+            },
+            (err, res) => {
+                if (err) throw err;
+                start();
+            }
+        )
+    })
+};
