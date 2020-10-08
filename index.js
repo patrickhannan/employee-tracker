@@ -1,19 +1,18 @@
 const inquirer = require("inquirer")
 const mysql = require("mysql");
-const { allowedNodeEnvironmentFlags } = require("process");
-const { start } = require("repl");
+var deptList = [];
 
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "",
+    password: "Patrickcode",
     database: "employee_db",
 });
 
 connection.connect(function (err) {
     if (err) throw err;
-    start();
+    startMenu();
   });
 
 var firstPrompt = {
@@ -32,7 +31,7 @@ var firstPrompt = {
     ],
 };
 
-function start() {
+function startMenu() {
     inquirer
     .prompt(firstPrompt)
     .then((data) => {
@@ -61,17 +60,16 @@ function addDepartment() {
     .prompt([
         {
             type: "input",
-            name: "addedDepartment",
+            name: "newDepartment",
             message: "What is the name of the department you would like to add?",
         }
     ]).then((response) => {
         connection.query(
             "INSERT INTO department SET ?", 
-            { name: addedDepartment
-            },
+            { name: response.newDepartment },
             (err, res) => {
                 if (err) throw err;
-                start();
+                startMenu();
             }
         )
     })
