@@ -50,7 +50,7 @@ function startMenu() {
         } else if (data.commandChoice === "Update Employee Roles") {
             updateRoles();
         } else if (data.commandChoice === "Exit") {
-            connection.end;
+            connection.end();
         }
     })
 };
@@ -80,7 +80,6 @@ function addRole() {
     connection.query("SELECT * FROM department", function (err, results) {
         if (err) throw err;
         const arrayofDepartments = results.map(department => department.division)
-        console.log(arrayofDepartments)
         inquirer
         .prompt([
             {
@@ -105,7 +104,7 @@ function addRole() {
                 {
                     title: jobTitle,
                     salary: salary,
-                    department_Title: departmentTitle,
+                    department_title: departmentTitle,
                 },
                 (err, results) => {
                     if (err) throw err;
