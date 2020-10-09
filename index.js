@@ -152,7 +152,7 @@ function addEmployee() {
                 },
                 (err, results) => {
                     if (err) throw err;
-                    startMenu();
+                    viewEmployees();
                 }
             )
         })
@@ -184,4 +184,51 @@ function viewEmployees() {
         startMenu();
       }
     );
+}
+
+function updateRoles() {
+    connection.query("SELECT * FROM role;", function (err, data) {
+        if (err) throw err;
+        const arrayofRoles = data.map(role => role.title)
+    
+        connection.query("SELECT * FROM employee;", function (err,results) {
+            if (err) throw err;
+            inquirer
+            .prompt([
+                {
+                    name: "roleUpdateName",
+                    type: "list",
+                    message: "Which employee would you like to update?",
+                    choices: function () {
+                        var nameArray = [];
+                        for (let i = 0; i < results.length; i++) {
+                            nameArray.push(`${results[i].first_name} ${results[i].last_name}`
+                            );
+                        }
+                        return nameArray;
+                    },
+                },
+                {
+                    name: "roleUpdateRole",
+                    type: "list",
+                    message: "Which role would you like to give this employee?",
+                    choices: arrayofRoles,
+                },
+            ]).then((response) => {
+                for (let i = 0; i < data.length; i++) {
+                    if (response.roleUpdateRole === data[i].title) {
+                    }
+                }
+                connection.query(
+                    `UPDATE employee SET role_id = "${response.roleUpdateRole}" WHERE first_name = "${
+                      response.roleUpdateName.split(" ")[0]
+                    }"`,
+                    (err, response) => {
+                    if (err) throw err;
+                    viewEmployees();
+                    }
+                );
+            })  
+        })
+    }) 
 }
