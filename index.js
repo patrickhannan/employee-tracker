@@ -66,11 +66,11 @@ function addDepartment() {
     ]).then((response) => {
         connection.query(
             "INSERT INTO department SET ?", 
-            { division: response.newDepartment },
+            { name: response.newDepartment },
             (err, data) => {
                 if (err) throw err;
                 console.log(data)
-                startMenu();
+                viewDepartments();
             }
         )
     })
@@ -160,5 +160,12 @@ function addEmployee() {
             )
         })
     })
-
 }
+
+function viewDepartments() {
+    connection.query("SELECT * FROM department", (err, results) => {
+      if (err) throw err;
+      console.table(results);
+      startMenu();
+    });
+  }
