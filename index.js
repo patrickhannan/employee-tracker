@@ -140,10 +140,25 @@ function addEmployee() {
             },
             {
                 type: "input",
-                name: "manager",
-                message: "What is the employee's manager?",
+                name: "managerName",
+                message: "Who is the employee's manager?",
             },
-        ])
+        ]).then((response) => {
+            connection.query(
+                "INSERT INTO employee SET ?", 
+                {
+                    first_name: response.employeeFirstName,
+                    last_name: response.employeeLastName,
+                    role_title: response.employeeRole,
+                    manager: response.managerName,
+                },
+                (err, results) => {
+                    if (err) throw err;
+                    console.table(results)
+                    startMenu();
+                }
+            )
+        })
     })
 
 }
