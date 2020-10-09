@@ -67,9 +67,9 @@ function addDepartment() {
         connection.query(
             "INSERT INTO department SET ?", 
             { division: response.newDepartment },
-            (err, results) => {
+            (err, data) => {
                 if (err) throw err;
-                console.table(results)
+                console.log(data)
                 startMenu();
             }
         )
@@ -116,3 +116,34 @@ function addRole() {
     })
 };
 
+function addEmployee() {
+    connection.query("SELECT * FROM roles", function (err, results) {
+        if(err) throw err;
+        const arrayofRoles = results.map(roles => roles.title)
+        inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "employeeFirstName",
+                message: "What is the employee's first name?",
+            },
+            {
+                type: "input",
+                name: "employeeLastName",
+                message: "What is the employee's last name?",
+            },
+            {
+                type: "list",
+                name: "employeeRole",
+                message: "What is the employee's role?",
+                choices: arrayofRoles
+            },
+            {
+                type: "input",
+                name: "manager",
+                message: "What is the employee's manager?",
+            },
+        ])
+    })
+
+}
