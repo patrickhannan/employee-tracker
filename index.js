@@ -32,7 +32,6 @@ var firstPrompt = {
 };
 
 function startMenu() {
-    viewEmployees();
     inquirer
     .prompt(firstPrompt)
     .then((data) => {
@@ -79,7 +78,7 @@ function addDepartment() {
 function addRole() {
     connection.query("SELECT * FROM department", function (err, results) {
         if (err) throw err;
-        const arrayofDepartments = results.map(department => department.division)
+        const arrayofDepartments = results.map(department => department.name)
         inquirer
         .prompt([
             {
@@ -98,13 +97,13 @@ function addRole() {
                 message: "What department does this role associate with?",
                 choices: arrayofDepartments
             },
-        ]).then((jobTitle, salary, departmentTitle) => {
+        ]).then((response) => {
             connection.query(
-                "INSERT INTO roles SET ?", 
+                "INSERT INTO role SET ?", 
                 {
-                    title: jobTitle,
-                    salary: salary,
-                    department_title: departmentTitle,
+                    title: response.jobTitle,
+                    salary: response.salary,
+                    department_id: response.departmentTitle,
                 },
                 (err, results) => {
                     if (err) throw err;
@@ -116,9 +115,9 @@ function addRole() {
 };
 
 function addEmployee() {
-    connection.query("SELECT * FROM roles", function (err, results) {
+    connection.query("SELECT * FROM role", function (err, results) {
         if(err) throw err;
-        const arrayofRoles = results.map(roles => roles.title)
+        const arrayofRoles = results.map(role => role.title)
         inquirer
         .prompt([
             {
@@ -148,8 +147,8 @@ function addEmployee() {
                 {
                     first_name: response.employeeFirstName,
                     last_name: response.employeeLastName,
-                    role_title: response.employeeRole,
-                    manager: response.managerName,
+                    role_id: response.employeeRole,
+                    manager_id: response.managerName,
                 },
                 (err, results) => {
                     if (err) throw err;
@@ -169,9 +168,20 @@ function viewDepartments() {
 }
 
 function viewRoles() {
-    connection.query("SELECT * FROM roles", (err, results) => {
+    connection.query("SELECT * FROM role", (err, results) => {
       if (err) throw err;
       console.table(results);
       startMenu();
     });
+}
+
+function viewEmployees() {
+    connection.query(
+      "SELECT * FROM employee", 
+      (err, results) => {
+        if (err) throw err;
+        console.table(results);
+        startMenu();
+      }
+    );
 }
