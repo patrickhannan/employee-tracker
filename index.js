@@ -32,6 +32,7 @@ var firstPrompt = {
 };
 
 function startMenu() {
+    viewEmployees();
     inquirer
     .prompt(firstPrompt)
     .then((data) => {
@@ -67,9 +68,8 @@ function addDepartment() {
         connection.query(
             "INSERT INTO department SET ?", 
             { name: response.newDepartment },
-            (err, data) => {
+            (err, results) => {
                 if (err) throw err;
-                console.log(data)
                 viewDepartments();
             }
         )
@@ -108,8 +108,7 @@ function addRole() {
                 },
                 (err, results) => {
                     if (err) throw err;
-                    console.table(results)
-                    startMenu();
+                    viewRoles();
                 }
             )
         })
@@ -154,7 +153,6 @@ function addEmployee() {
                 },
                 (err, results) => {
                     if (err) throw err;
-                    console.table(results)
                     startMenu();
                 }
             )
@@ -168,4 +166,12 @@ function viewDepartments() {
       console.table(results);
       startMenu();
     });
-  }
+}
+
+function viewRoles() {
+    connection.query("SELECT * FROM roles", (err, results) => {
+      if (err) throw err;
+      console.table(results);
+      startMenu();
+    });
+}
